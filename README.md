@@ -1,1 +1,1 @@
-# hapi-prototype
+# angular-prototype
