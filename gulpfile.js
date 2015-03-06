@@ -4,44 +4,51 @@ var less = require('gulp-less');
 var lint = require('gulp-jshint');
 var copy = require('gulp-copy');
 var watch = require('gulp-watch');
+var babel = require('gulp-babel');
 
 var paths = {
-  filesrc: ['./client/**/*', './server/**/*'],
-  jadesrc: ['./client/**/*.jade'],
-  lesssrc: ['./client/**/*.less'],
-  codesrc: ['./client/**/*.js', './server/**/*.js'],
-  copysrc: ['./client/**/*.js', './client/**/*.mp3', './client/**/*.jpg', './client/**/*.wav', './client/**/*.png', './client/**/*.ico'],
-  jadedst: './public',
-  lessdst: './public',
-  copydst: './public'
+  filesrc:  ['./client/**/*', './server/**/*', './test/**/*'],
+  jadesrc:  ['./client/**/*.jade'],
+  lesssrc:  ['./client/**/*.less'],
+  lintsrc:  ['./client/**/*.js', './server/**/*.js', './test/**/*.js'],
+  babelsrc: ['./client/**/*.js'],
+  mediasrc: ['./client/**/*.mp3', './client/**/*.jpg', './client/**/*.wav', './client/**/*.png', './client/**/*.ico'],
+  destination: './public'
 };
 
-gulp.task('build', ['jade', 'less', 'lint', 'copy']);
+gulp.task('build', ['jade', 'less', 'lint', 'babel', 'copy']);
 gulp.task('default', ['build', 'watch']);
 
 gulp.task('jade', function() {
   gulp.src(paths.jadesrc)
     .pipe(jade({pretty: true, doctype: 'html'}))
     .on('error', console.error.bind(console))
-    .pipe(gulp.dest(paths.jadedst));
+    .pipe(gulp.dest(paths.destination));
 });
 
 gulp.task('less', function() {
   gulp.src(paths.lesssrc)
     .pipe(less())
     .on('error', console.error.bind(console))
-    .pipe(gulp.dest(paths.lessdst));
+    .pipe(gulp.dest(paths.destination));
 });
 
 gulp.task('lint', function() {
-  gulp.src(paths.codesrc)
+  gulp.src(paths.lintsrc)
     .pipe(lint())
     .pipe(lint.reporter('jshint-stylish'));
 });
 
+gulp.task('babel', function() {
+  gulp.src(paths.babelsrc)
+    .pipe(babel())
+    .on('error', console.error.bind(console))
+    .pipe(gulp.dest(paths.destination));
+});
+
 gulp.task('copy', function() {
-  gulp.src(paths.copysrc)
-    .pipe(copy(paths.copydst, {prefix:1}));
+  gulp.src(paths.mediasrc)
+    .pipe(copy(paths.destination, {prefix:1}));
 });
 
 gulp.task('watch', function() {

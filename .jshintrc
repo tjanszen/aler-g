@@ -18,6 +18,7 @@
   "strict": true,
   "debug": true,
   "validthis": true,
+  "esnext": true,
 
   "node": true,
   "devel": true,
