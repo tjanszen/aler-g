@@ -3,8 +3,10 @@ var jade = require('gulp-jade');
 var less = require('gulp-less');
 var lint = require('gulp-jshint');
 var copy = require('gulp-copy');
+var maps = require("gulp-sourcemaps");
 var watch = require('gulp-watch');
 var babel = require('gulp-babel');
+var concat = require("gulp-concat");
 
 var paths = {
   filesrc:  ['./client/**/*', './server/**/*', './test/**/*'],
@@ -41,8 +43,11 @@ gulp.task('lint', function() {
 
 gulp.task('babel', function() {
   gulp.src(paths.babelsrc)
+    .pipe(maps.init())
+    .pipe(concat("index.js"))
     .pipe(babel())
     .on('error', console.error.bind(console))
+    .pipe(maps.write("."))
     .pipe(gulp.dest(paths.destination));
 });
 
